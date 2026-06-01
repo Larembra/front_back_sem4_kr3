@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4285f4">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/icons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+
+    <title>Заметки (13-18)</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/chota@latest">
+
+    <style>
+        .no-break { white-space: nowrap; }
+        .tab { cursor: pointer; }
+        .tab.active { background-color: #4285f4; color: white; }
+        footer { margin-top: 3rem; padding: 1rem; border-top: 1px solid #eee; }
+        .card { padding: 1rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>A вот и «Заметки» – наше первое <span class="no-break">оффлайн-приложение</span></h1>
+        <nav class="tabs is-center">
+            <button id="home-btn" class="tab active col-6">Главная</button>
+            <button id="about-btn" class="tab col-6">О приложении</button>
+        </nav>
+    </header>
+
+    <main id="app-content" style="margin-top: 2rem;"></main>
+
+    <footer class="is-center">
+        <button id="enable-push" class="button success">Включить уведомления</button>
+        <button id="disable-push" class="button error" style="display:none;">Отключить уведомления</button>
+    </footer>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

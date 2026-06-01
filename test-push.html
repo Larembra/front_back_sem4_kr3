@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Тест Push</title>
+</head>
+<body>
+<h2>Тест Push-уведомлений</h2>
+<button id="enable">Включить уведомления</button>
+<button id="disable" style="display:none;">Отключить уведомления</button>
+
+<script>
+    const VAPID_PUBLIC_KEY = 'BG_mvqULlWO1eUaikilybUP9aRMlUQONojEX4b1AlYnpzkI60W2KcGdXei8Et2JsBB6rh8C_sleTLXpQT3EgiO0';
+
+    function urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+        console.log('SW зарегистрирован');
+
+        const enableBtn = document.getElementById('enable');
+        const disableBtn = document.getElementById('disable');
+
+        reg.pushManager.getSubscription().then(sub => {
+            if (sub) {
+                enableBtn.style.display = 'none';
+                disableBtn.style.display = 'inline-block';
+            }
+        });
+
+        enableBtn.addEventListener('click', async () => {
+            console.log('Кнопка нажата');
+            const perm = await Notification.requestPermission();
+            if (perm !== 'granted') {
+                alert('Нет разрешения');
+                return;
+            }
+            const sub = await reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+            });
+            await fetch('/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(sub)
+            });
+            console.log('Подписка отправлена');
+            enableBtn.style.display = 'none';
+            disableBtn.style.display = 'inline-block';
+        });
+
+        disableBtn.addEventListener('click', async () => {
+            const sub = await reg.pushManager.getSubscription();
+            if (sub) {
+                await fetch('/unsubscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ endpoint: sub.endpoint })
+                });
+                await sub.unsubscribe();
+            }
+            disableBtn.style.display = 'none';
+            enableBtn.style.display = 'inline-block';
+        });
+    });
+</script>
+</body>
+</html>

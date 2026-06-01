@@ -1,0 +1,18 @@
+{
+  "name": "kr3",
+  "version": "1.0.0",
+  "description": "Notes App with HTTPS, App Shell, WebSocket and Notifications",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.5",
+    "cors": "^2.8.6",
+    "express": "^4.22.2",
+    "mkcert": "^3.2.0",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
+    "web-push": "^3.6.7"
+  }
+}
